@@ -1,6 +1,7 @@
 (defpackage tagger/tests/main
   (:use :cl
         :tagger
+        :tagger/utility
         :jfh-testing))
 (in-package :tagger/tests/main)
 
