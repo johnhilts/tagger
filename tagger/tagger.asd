@@ -1,12 +1,32 @@
+#-quicklisp
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                       (user-homedir-pathname))))
+  (when (probe-file quicklisp-init)
+    (load quicklisp-init)))
+
+(ql:quickload :hunchentoot)
+(ql:quickload :cl-who)
+(ql:quickload :cl-json)
+
 (defsystem "tagger"
   :version "0.1.0"
   :author "John Hilts"
   :license "MIT"
-  :depends-on ("cl-json"
-               "hunchentoot")
-  :components ((:module "src"
-                :components
-                ((:file "main"))))
+  :serial t
+  :depends-on (#:cl-who #:hunchentoot #:cl-json)
+  :components ((:file "package")
+               (:module "src"
+                        :components
+                        ((:file "common/constants")
+                         (:file "server/web-common")
+                         (:file "server/util")
+                         (:file "server/io")
+                         (:file "server/web-infrastructure")
+                         (:file "server/info")
+                         (:file "server/api")
+                         (:file "server/html")
+                         (:file "main"))))
+  
   :description ""
   :in-order-to ((test-op (test-op "tagger/tests"))))
 
