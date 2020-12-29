@@ -28,9 +28,13 @@
   (chain add-button
          (add-event-listener "click" add-info false)))
 
+(define-for-ps filter-info-by-tag (tag)
+  (get-info-list-from-server tag)
+  t)
+
 (define-for-ps filter-info ()
   (let ((filter-text (@ (chain document (get-element-by-id "info-filter-text")) value)))
-    (get-info-list-from-server filter-text))
+    (filter-info-by-tag filter-text))
   t)
 
 (define-for-ps render-info-filter ()
@@ -71,7 +75,7 @@
          (parent-element tag-list-table-body)
          (column-header (chain document (get-element-by-id "tag-list-column-header"))))
     (clear-children parent-element)
-    (setf (chain column-header inner-text) "Notes")
+    (setf (chain column-header inner-text) "Tags")
     (chain tag-list
            (map
             #'(lambda (tag)
@@ -82,5 +86,5 @@
                         (label
                          (pre
                           (style . "(echo pre-style)")
-                          tag))))))
+                          (a (onclick . "(filter-info-by-tag tag)") tag)))))))
                 t)))))

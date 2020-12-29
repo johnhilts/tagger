@@ -45,11 +45,13 @@
                       (:textarea :id "tags-content" :placeholder "Enter Tags here (comma-separated)." :rows "5" :cols "100"))
                      (:button :id "info-add-btn" "Add"))
                     (:div
-                     (:div :style "display: inline-block;"
+                     (:div :style "display: inline-block;vertical-align: top;"
                       (:table :id "tag-list"
                               (:thead (:th :id "tag-list-column-header" "Tags"))
                               (:tbody :id "tag-list-body" (:tr (:td "(no tags yet)")))))
-                     (:div :style "display: inline-block;"
+                     (:div :style "display: inline-block;width: 10%;"
+                           (:span "&nbsp;"))
+                     (:div :style "display: inline-block;vertical-align: top;"
                       (:table :id "note-list"
                               (:thead (:th :id "note-list-column-header" "Notes"))
                               (:tbody :id "note-list-body" (:tr (:td "(no notes yet)")))))))))))))
