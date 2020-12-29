@@ -80,7 +80,7 @@ key points:
     (car cur)
     (cdr cur))))
 
-(defun fetch-or-create-data (file-path &optional call-back)
+(defun fetch-or-create-hashtable (file-path &optional call-back)
   "read data from persistence store; call call back if provided"
   (let ((ht (make-hash-table :test 'equal))
         (data (read-complete-file-by-line file-path)))
@@ -89,6 +89,13 @@ key points:
     (if call-back
         (funcall call-back ht)
         ht)))
+
+(defun fetch-or-create-data (file-path &optional call-back)
+  "read data from persistence store; call call back if provided"
+  (let ((data (read-complete-file file-path)))
+    (if call-back
+        (funcall call-back data)
+        data)))
 
 (defun create-or-add-to-entry (key value ht)
   (multiple-value-bind (entry present-p) (gethash key ht)

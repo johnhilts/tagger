@@ -7,13 +7,14 @@
 (ql:quickload :hunchentoot)
 (ql:quickload :cl-who)
 (ql:quickload :cl-json)
+(ql:quickload :parenscript)
 
 (defsystem "tagger"
   :version "0.1.0"
   :author "John Hilts"
   :license "MIT"
   :serial t
-  :depends-on (#:cl-who #:hunchentoot #:cl-json)
+  :depends-on (#:cl-who #:hunchentoot #:parenscript #:cl-json #:jfh-web)
   :components ((:file "package")
                (:module "src"
                         :components
@@ -24,6 +25,11 @@
                          (:file "server/web-infrastructure")
                          (:file "server/info")
                          (:file "server/api")
+                         (:file "client/common")
+                         (:file "client/ajax")
+                         (:file "client/util")
+                         (:file "client/info")
+                         (:file "client/ui")                         
                          (:file "server/html")
                          (:file "main"))))
   

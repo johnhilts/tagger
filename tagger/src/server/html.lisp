@@ -26,19 +26,21 @@
                      :rel "stylesheet"
                      :href "/styles.css")
               (:script :type "text/javascript"
-                       ;; (str (jfh-web:define-ps-with-html-macro))
-                       ;; (str (share-server-side-constants))
-                       ;; (str (client-todo))
-                       ;; (str (client-app-settings))
-                       ;; (str (client-ui))
-                       ;; (dolist (e (invoke-registered-ps-functions))
-                       ;; (str (funcall e)))
-                       ))
+                       (str (jfh-web:define-ps-with-html-macro))
+                       (str (share-server-side-constants))
+                       (str (client-info))
+                       (str (client-ui))
+                       (dolist (e (invoke-registered-ps-functions))
+                         (str (funcall e)))))
              (:body
+              (:div :id "info-filter")
               (:div
                (:h1 "Info List"
                     (:div
-                     (:textarea :id "info-content" :placeholder "Enter Info here." :rows "5" :cols "100")
+                     (:div
+                      (:textarea :id "note-content" :placeholder "Enter Info here." :rows "5" :cols "100"))
+                     (:div
+                      (:textarea :id "tags-content" :placeholder "Enter Tags here (comma-separated)." :rows "5" :cols "100"))
                      (:button :id "info-add-btn" "Add"))
                     (:div
                      (:table :id "info-list"

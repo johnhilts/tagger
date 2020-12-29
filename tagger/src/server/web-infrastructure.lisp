@@ -3,9 +3,9 @@
 (defun publish-static-content ()
   "static content"
   (push (create-static-file-dispatcher-and-handler
-         "/favicon.ico" "ez-favicon.ico") *dispatch-table*)
+         "/favicon.ico" "src/ez-favicon.ico") *dispatch-table*)
   (push (create-static-file-dispatcher-and-handler
-         "/styles.css" "static/styles.css") *dispatch-table*))
+         "/styles.css" "src/static/styles.css") *dispatch-table*))
 
 (defparameter *the-http-server* nil)
 
@@ -33,4 +33,3 @@
 (defun start-web-app ()
   "start the web app"
   (publish-static-content))
-
