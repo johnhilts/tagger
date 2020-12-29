@@ -1,17 +1,14 @@
 
 (in-package #:tagger)
 
-(defun get-info-by-id (id)
-  "get info by unique ID"
-  (let ((infos (test-json-data)))
-         (find-if
-          #'(lambda (e)
-              (let ((search-id (getf e :id)))
-                (equal search-id id))) infos)))
+(defun get-info-by-tag (tag)
+  "get info by (unique) tag"
+  (let ((infos (fetch-or-create-infos)))
+    (multiple-value-bind (note) (gethash tag infos) note)))
 
-(defun get-info (id)
-  "get info by ID then convert to json"
-  (let ((info (get-info-by-id id)))
+(defun get-info (tag)
+  "get info by tag then convert to json"
+  (let ((info (get-info-by-tag tag)))
     (encode-plist-to-json-as-string info)))
 
 (defun fetch-or-create-infos ()
@@ -22,11 +19,9 @@
   "get info list and encode as json"
   (encode-multiple-plists-to-json-as-string (fetch-or-create-infos)))
 
-(defun info-data-get (id)
+(defun info-data-get (tag)
   "get info by ID or entire list"
-  (if id
-      (get-info (parse-integer id))
-      (get-info-list)))
+  (json:encode-json-to-string (get-info-by-tag tag)))
 
 (define-data-update-handler info-data-add (model-note model-tags)
     "add info data to persisted data"

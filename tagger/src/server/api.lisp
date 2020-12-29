@@ -1,7 +1,7 @@
 
 (in-package #:tagger)
 
-(define-api-endpoint info-data *info-api-endpoint* (id)
+(define-api-endpoint info-data *info-api-endpoint* (tag)
   "REST endpoint for tagged info"
   (case verb
     (:put
@@ -11,4 +11,4 @@
     (:delete
      (info-data-delete raw-data))
     (:get
-     (info-data-get id))))
+     (info-data-get tag))))
