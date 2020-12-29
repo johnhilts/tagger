@@ -22,16 +22,14 @@
 (define-for-ps init ()
   "initialize html elements and JS objects on page load"
   (render-info-filter)
-  (get-info-list-from-server)
   (setf add-button (chain document
                           (get-element-by-id "info-add-btn")))
   (chain add-button
          (add-event-listener "click" add-info false)))
 
 (define-for-ps filter-info ()
-  (let* ((filter-text (@ (chain document (get-element-by-id "info-filter-text")) value))
-         (filtered-infos (chain info-list (filter (lambda (info) (chain (@ info tag) (match (new (-reg-exp filter-text "i")))))))))
-    (render-info-list filtered-infos))
+  (let ((filter-text (@ (chain document (get-element-by-id "info-filter-text")) value)))
+    (get-info-list-from-server filter-text))
   t)
 
 (define-for-ps render-info-filter ()
@@ -50,22 +48,20 @@
   "render html elements for info list"
   (let* ((info-list-table-body (chain document (get-element-by-id "info-list-body")))
          (parent-element info-list-table-body)
-         (column-header (chain document (get-element-by-id "info-list-column-header")))
-         (count (length info-list)))
+         (column-header (chain document (get-element-by-id "info-list-column-header"))))
     (clear-children parent-element)
     (setf (chain column-header inner-text) "Tagged Info")
     (chain info-list
            (map
-            #'(lambda (info)
-                (let ((note-text-id (+ *note-text* index))
-                      (pre-style "display:inline;"))
+            #'(lambda (note)
+                (let ((pre-style "display:inline;"))
                   (jfh-web::with-html-elements
                       (tr
                        (td
                         (label
                          (pre
                           (style . "(echo pre-style)")
-                          "(@ info note)"))))))
+                          note))))))
                 t)))))
 
 
