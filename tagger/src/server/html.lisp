@@ -35,17 +35,24 @@
              (:body
               (:div :id "info-filter")
               (:div
-               (:h1 "Info List"
+               (:h1 "Tagged Info"
                     (:div
                      (:div
-                      (:textarea :id "note-content" :placeholder "Enter Info here." :rows "5" :cols "100"))
+                      (:label "Notes")
+                      (:textarea :id "note-content" :placeholder "Enter Note here." :rows "5" :cols "100"))
                      (:div
+                      (:label "Tags")
                       (:textarea :id "tags-content" :placeholder "Enter Tags here (comma-separated)." :rows "5" :cols "100"))
                      (:button :id "info-add-btn" "Add"))
                     (:div
-                     (:table :id "info-list"
-                             (:thead (:th :id "info-list-column-header" "Info"))
-                             (:tbody :id "info-list-body" (:tr (:td "(no info yet)"))))))))))))
+                     (:div :style "display: inline-block;"
+                      (:table :id "tag-list"
+                              (:thead (:th :id "tag-list-column-header" "Tags"))
+                              (:tbody :id "tag-list-body" (:tr (:td "(no tags yet)")))))
+                     (:div :style "display: inline-block;"
+                      (:table :id "note-list"
+                              (:thead (:th :id "note-list-column-header" "Notes"))
+                              (:tbody :id "note-list-body" (:tr (:td "(no notes yet)")))))))))))))
 
 (define-easy-handler (todo-page :uri "/info") ()
   "HTTP endpoint"

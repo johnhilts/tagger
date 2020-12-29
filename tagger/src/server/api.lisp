@@ -1,14 +1,16 @@
 
 (in-package #:tagger)
 
-(define-api-endpoint info-data *info-api-endpoint* (tag)
-  "REST endpoint for tagged info"
+(define-api-endpoint note-data *note-api-endpoint* (tag)
+  "REST endpoint for tagged notes"
   (case verb
-    (:put
-     (info-data-update raw-data))
     (:post
      (info-data-add raw-data))
-    (:delete
-     (info-data-delete raw-data))
     (:get
-     (info-data-get tag))))
+     (note-data-get tag))))
+
+(define-api-endpoint tag-data *tag-api-endpoint* ()
+  "REST endpoint for tags"
+  (case verb
+    (:get
+     (tag-data-get))))

@@ -22,6 +22,7 @@
 (define-for-ps init ()
   "initialize html elements and JS objects on page load"
   (render-info-filter)
+  (render-tag-list (get-tag-list-from-server))
   (setf add-button (chain document
                           (get-element-by-id "info-add-btn")))
   (chain add-button
@@ -39,19 +40,19 @@
         (div
          (div
           (span (br (ref . "br")))
-          (input (id . "info-filter-text") (type . "textbox") (placeholder . "Enter text to filter on here"))
+          (input (id . "info-filter-text") (type . "textbox") (placeholder . "Enter tag to filter on here"))
           (span "  ")
           (button (onclick . "(filter-info)") "Filter")))))
   t)
 
-(define-for-ps render-info-list (info-list)
-  "render html elements for info list"
-  (let* ((info-list-table-body (chain document (get-element-by-id "info-list-body")))
-         (parent-element info-list-table-body)
-         (column-header (chain document (get-element-by-id "info-list-column-header"))))
+(define-for-ps render-note-list (note-list &optional tag)
+  "render html elements for note list"
+  (let* ((note-list-table-body (chain document (get-element-by-id "note-list-body")))
+         (parent-element note-list-table-body)
+         (column-header (chain document (get-element-by-id "note-list-column-header"))))
     (clear-children parent-element)
-    (setf (chain column-header inner-text) "Tagged Info")
-    (chain info-list
+    (setf (chain column-header inner-text) (if tag (concatenate 'string "Notes tagged with " tag) "Notes"))
+    (chain note-list
            (map
             #'(lambda (note)
                 (let ((pre-style "display:inline;"))
@@ -64,4 +65,22 @@
                           note))))))
                 t)))))
 
-
+(define-for-ps render-tag-list (tag-list)
+  "render html elements for tag list"
+  (let* ((tag-list-table-body (chain document (get-element-by-id "tag-list-body")))
+         (parent-element tag-list-table-body)
+         (column-header (chain document (get-element-by-id "tag-list-column-header"))))
+    (clear-children parent-element)
+    (setf (chain column-header inner-text) "Notes")
+    (chain tag-list
+           (map
+            #'(lambda (tag)
+                (let ((pre-style "display:inline;"))
+                  (jfh-web::with-html-elements
+                      (tr
+                       (td
+                        (label
+                         (pre
+                          (style . "(echo pre-style)")
+                          tag))))))
+                t)))))

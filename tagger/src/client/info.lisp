@@ -24,8 +24,18 @@
   "define callback and get info list from server and re-render html elements"
   (flet ((call-back ()
            (let ((server-info-list (chain -j-s-o-n (parse (@ this response-text)))))
-             (render-info-list (or server-info-list ([])))
+             (render-note-list (or server-info-list ([])) tag)
              (setf info-list server-info-list)
              t)))
-    (let ((get-url (concatenate 'string *info-api-endpoint* "?tag=" tag)))
+    (let ((get-url (concatenate 'string *note-api-endpoint* "?tag=" tag)))
       (get-from-server get-url call-back))))
+
+
+(define-for-ps get-tag-list-from-server ()
+  "define callback and get tag list from server and re-render html elements"
+  (flet ((call-back ()
+           (let ((server-tag-list (chain -j-s-o-n (parse (@ this response-text)))))
+             (render-tag-list (or server-tag-list ([])))
+             ;; (setf info-list server-info-list)
+             t)))
+    (get-from-server *tag-api-endpoint* call-back)))

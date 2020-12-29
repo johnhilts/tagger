@@ -1,10 +1,10 @@
 
 (in-package #:tagger)
 
-(defun get-info-by-tag (tag)
+(defun get-notes-by-tag (tag)
   "get info by (unique) tag"
   (let ((infos (fetch-or-create-infos)))
-    (multiple-value-bind (note) (gethash tag infos) note)))
+    (multiple-value-bind (notes) (gethash tag infos) notes)))
 
 (defun fetch-or-create-infos ()
   "get info from persisted data"
@@ -14,9 +14,9 @@
   "get info list and encode as json"
   (encode-multiple-plists-to-json-as-string (fetch-or-create-infos)))
 
-(defun info-data-get (tag)
-  "get info by ID or entire list"
-  (json:encode-json-to-string (get-info-by-tag tag)))
+(defun note-data-get (tag)
+  "get notes by tag"
+  (json:encode-json-to-string (get-notes-by-tag tag)))
 
 (define-data-update-handler info-data-add (model-note model-tags)
     "add info data to persisted data"
@@ -27,3 +27,13 @@
     (json:encode-json-to-string (list 'ok))))
 
 
+(defun get-tags ()
+  "get tags"
+  (let ((infos (fetch-or-create-infos))
+        (tags ()))
+    (maphash #'(lambda (key -) (push key tags)) infos)
+    tags))
+
+(defun tag-data-get ()
+  "get notes by tag"
+  (json:encode-json-to-string (get-tags)))
