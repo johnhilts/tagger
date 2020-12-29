@@ -7,7 +7,7 @@
 
 (define-for-ps send-new-info-item-to-server (info-item)
   "save new info on server"
-  (send-to-server *info-api-endpoint* "POST" info-item))
+  (send-to-server *note-api-endpoint* "POST" info-item))
     
 (define-for-ps add-info (evt)
   "add info on client and server and re-render html elements"
@@ -16,7 +16,7 @@
          (tags (chain document (get-element-by-id "tags-content")))
          (note-text (chain note value))
          (tag-text (chain tags value))
-         (info-item  (create note note-text tags (chain tag-text (split ",")))))
+         (info-item  (create note note-text tags (chain (chain tag-text (split ",")) (map  #'(lambda (tag) (chain tag (trim))))))))
     (send-new-info-item-to-server info-item)
     t))
 

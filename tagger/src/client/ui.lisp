@@ -22,7 +22,7 @@
 (define-for-ps init ()
   "initialize html elements and JS objects on page load"
   (render-info-filter)
-  (render-tag-list (get-tag-list-from-server))
+  (get-tag-list-from-server)
   (setf add-button (chain document
                           (get-element-by-id "info-add-btn")))
   (chain add-button
