@@ -5,9 +5,9 @@
   (ps
     (defvar info-list ([]))))
 
-(define-for-ps send-new-info-item-to-server (info-item)
+(define-for-ps send-new-info-item-to-server (info-item &optional call-back)
   "save new info on server"
-  (send-to-server *note-api-endpoint* "POST" info-item))
+  (send-to-server *note-api-endpoint* "POST" info-item call-back))
     
 (define-for-ps add-info (evt)
   "add info on client and server and re-render html elements"
@@ -17,7 +17,8 @@
          (note-text (chain note value))
          (tag-text (chain tags value))
          (info-item  (create note note-text tags (chain (chain tag-text (split ",")) (map  #'(lambda (tag) (chain tag (trim))))))))
-    (send-new-info-item-to-server info-item)
+    (send-new-info-item-to-server info-item #'(lambda () (get-tag-list-from-server)))
+    (get-tag-list-from-server)
     t))
 
 (define-for-ps get-info-list-from-server (tag)
