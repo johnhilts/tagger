@@ -49,46 +49,38 @@
           (button (onclick . "(filter-info)") "Filter")))))
   t)
 
-(define-for-ps format-note (note)
-  "if link found, then turn it into anchor tag; right now supports up to 1 link"
-  (let ((http-match (chain note (match (regex "/^http:\/\/|^https:\/\/[\w\\.]+$/i")))))
-    (if http-match
-        (let* ((index (@ http-match index))
-               (match (chain note (substring index) (match (regex "/ /"))))
-               (next-space (if match (@ match index) nil))
-               (link (chain note (substring index (if next-space (+ index next-space) (- (length note) index))))))
-          (values note t link index))
-        (values note nil nil nil))))
-
 (define-for-ps render-note-list (note-list &optional tag)
   "render html elements for note list"
-  (let* ((note-list-table-body (chain document (get-element-by-id "note-list-body")))
-         (parent-element note-list-table-body)
-         (column-header (chain document (get-element-by-id "note-list-column-header"))))
-    (clear-children parent-element)
-    (setf (chain column-header inner-text) (if tag (concatenate 'string "Notes tagged with " tag) "Notes"))
-    (chain note-list
-           (map
-            #'(lambda (note)
-                (let ((pre-style "display:inline;"))
-                  (multiple-value-bind (note has-link link index)
-                      (format-note note)
-                    (if has-link
+  (flet ((is-hyperlink (note)
+           (chain note (match (regex "/^http:\\/\\/|^https:\\/\\/[\\w\\.\\?\\=\\/\\-\\~\\&]+$/i")))))
+    (let* ((note-list-table-body (chain document (get-element-by-id "note-list-body")))
+           (parent-element note-list-table-body)
+           (column-header (chain document (get-element-by-id "note-list-column-header"))))
+      (clear-children parent-element)
+      (setf (chain column-header inner-text) (if tag (concatenate 'string "Notes tagged with " tag) "Notes"))
+      (chain note-list
+             (map
+              #'(lambda (note)
+                  (let ((pre-style "display:inline;")
+                        (is-hyperlink (is-hyperlink note)))
+                    (if is-hyperlink
                         (jfh-web::with-html-elements
                             (tr
                              (td
-                              (label
-                               (pre
-                                (style . "(echo pre-style)")
-                                (a (href . "(echo link)") link))))))
+                              (ul (li
+                                   (label
+                                    (pre
+                                     (style . "(echo pre-style)")
+                                     (a (href . "(echo note)") note))))))))
                         (jfh-web::with-html-elements
                             (tr
                              (td
-                              (label
-                               (pre
-                                (style . "(echo pre-style)")
-                                note))))))))
-                t)))))
+                              (ul (li
+                                   (label
+                                    (pre
+                                     (style . "(echo pre-style)")
+                                     note))))))))))
+              t)))))
 
 (define-for-ps render-tag-list (tag-list)
   "render html elements for tag list"
