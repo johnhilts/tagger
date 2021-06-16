@@ -49,6 +49,17 @@
           (button (onclick . "(filter-info)") "Filter")))))
   t)
 
+(define-for-ps format-note (note)
+  "if link found, then turn it into anchor tag; right now supports up to 1 link"
+  (let ((http-match (chain note (match (regex "/http:\\/\\/|https:\\/\\//i")))))
+    (if http-match
+        (let* ((index (@ http-match index))
+               (match (chain note (substring index) (match (regex "/ /"))))
+               (next-space (if match (@ match index) nil))
+               (link (chain note (substring index (if next-space (+ index next-space) (- (length note) index))))))
+          (values note t link index))
+        (values note nil nil nil))))
+
 (define-for-ps render-note-list (note-list &optional tag)
   "render html elements for note list"
   (let* ((note-list-table-body (chain document (get-element-by-id "note-list-body")))
@@ -60,13 +71,23 @@
            (map
             #'(lambda (note)
                 (let ((pre-style "display:inline;"))
-                  (jfh-web::with-html-elements
-                      (tr
-                       (td
-                        (label
-                         (pre
-                          (style . "(echo pre-style)")
-                          note))))))
+                  (multiple-value-bind (note has-link link index)
+                      (format-note note)
+                    (if has-link
+                        (jfh-web::with-html-elements
+                            (tr
+                             (td
+                              (label
+                               (pre
+                                (style . "(echo pre-style)")
+                                (a (href . "(echo link)") link))))))
+                        (jfh-web::with-html-elements
+                            (tr
+                             (td
+                              (label
+                               (pre
+                                (style . "(echo pre-style)")
+                                note))))))))
                 t)))))
 
 (define-for-ps render-tag-list (tag-list)
