@@ -51,7 +51,7 @@
 
 (define-for-ps format-note (note)
   "if link found, then turn it into anchor tag; right now supports up to 1 link"
-  (let ((http-match (chain note (match (regex "/http:\\/\\/|https:\\/\\//i")))))
+  (let ((http-match (chain note (match (regex "/^http:\/\/|^https:\/\/[\w\\.]+$/i")))))
     (if http-match
         (let* ((index (@ http-match index))
                (match (chain note (substring index) (match (regex "/ /"))))
