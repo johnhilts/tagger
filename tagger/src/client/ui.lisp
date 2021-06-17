@@ -49,6 +49,13 @@
           (button (onclick . "(filter-info)") "Filter")))))
   t)
 
+(define-for-ps render-note-node (note is-hyperlink parent-element-id)
+  (let ((parent-element (chain document (get-element-by-id parent-element-id))))
+    (if is-hyperlink
+        (jfh-web::with-html-elements (ul (li (a (href . "(echo note)") note))))
+        (jfh-web::with-html-elements (ul (li (span note))))))
+  "")
+
 (define-for-ps render-note-list (note-list &optional tag)
   "render html elements for note list"
   (flet ((is-hyperlink (note)
@@ -60,26 +67,17 @@
       (setf (chain column-header inner-text) (if tag (concatenate 'string "Notes tagged with " tag) "Notes"))
       (chain note-list
              (map
-              #'(lambda (note)
+              #'(lambda (note index)
                   (let ((pre-style "display:inline;")
-                        (is-hyperlink (is-hyperlink note)))
-                    (if is-hyperlink
-                        (jfh-web::with-html-elements
-                            (tr
-                             (td
-                              (ul (li
-                                   (label
-                                    (pre
-                                     (style . "(echo pre-style)")
-                                     (a (href . "(echo note)") note))))))))
-                        (jfh-web::with-html-elements
-                            (tr
-                             (td
-                              (ul (li
-                                   (label
-                                    (pre
-                                     (style . "(echo pre-style)")
-                                     note))))))))))
+                        (is-hyperlink (is-hyperlink note))
+                        (label-id (concatenate 'string "label-" (chain index (to-string)))))
+                    (jfh-web::with-html-elements
+                        (tr
+                         (td
+                               (label (id . "(echo label-id)")
+                                (pre
+                                 (style . "(echo pre-style)")
+                                 (funcall #'render-note-node note is-hyperlink label-id))))))))
               t)))))
 
 (define-for-ps render-tag-list (tag-list)
