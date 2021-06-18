@@ -24,7 +24,7 @@
               (:title "Info List")
               (:link :type "text/css"
                      :rel "stylesheet"
-                     :href "/styles.css")
+                     :href "/styles.css?v=4")
               (:script :type "text/javascript"
                        (str (jfh-web:define-ps-with-html-macro))
                        (str (share-server-side-constants))

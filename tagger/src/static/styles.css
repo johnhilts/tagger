@@ -27,6 +27,10 @@ strong {
     color: #00cc00;
 }
 
+li a {
+    color: #00cc00;
+}
+
 code,
 pre-old {
     background: #eee;
